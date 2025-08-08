@@ -1,0 +1,2549 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BELANTARA - Belanja Langsung Antar</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3c34 0%, #4a7043 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6f00, #e65b00);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 111, 0, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Auth Forms */
+        .auth-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-align: center;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-form h2::before {
+            content: "🔒";
+            margin-right: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1a3c34;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 60, 52, 0.1);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .user-type-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .user-type-group label {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .auth-form .btn-primary {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 25px;
+        }
+
+        .auth-form a {
+            color: #ff6f00;
+            text-decoration: none;
+        }
+
+        .auth-form a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: block;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
+        .welcome-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .welcome-section h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Category Sections */
+        .category-section {
+            margin-top: 40px;
+        }
+
+        .category-section h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info h3 {
+            color: #000000;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .product-info p {
+            color: #000000;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+
+        /* Certificates Section */
+        .certificates-section {
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .certificates-section h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .certificates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .certificate-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .certificate-card embed {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* Cart */
+        .cart-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #ff6f00, #e65b00);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(255, 111, 0, 0.4);
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .cart-icon.customer-only {
+            display: flex;
+        }
+
+        .cart-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+        }
+
+        .cart-overlay.show {
+            display: block;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .checkout-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .address-input {
+            margin-bottom: 20px;
+        }
+
+        .address-input label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .address-input select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .address-input select:focus {
+            border-color: #1a3c34;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 60, 52, 0.1);
+        }
+
+        /* Product Modal */
+        .product-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1002;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .product-modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-align: center;
+        }
+
+        .product-modal-content h2 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .variant-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .variant-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .variant-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .variant-group select:focus {
+            border-color: #1a3c34;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26, 60, 52, 0.1);
+        }
+
+        /* Admin Dashboard */
+        .admin-dashboard {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .admin-nav button {
+            padding: 10px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .admin-nav button.active {
+            background: linear-gradient(45deg, #ff6f00, #e65b00);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .orders-table {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .orders-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .orders-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .date-filter {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .date-filter label {
+            color: white;
+            font-weight: 600;
+        }
+
+        .date-filter input {
+            padding: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .customers-table {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .customers-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .customers-table th,
+        .customers-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .customers-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+            }
+            .header, .nav, .main-content, .customer-dashboard, .admin-nav, .stats-grid, .cart-icon, 
+            .cart-sidebar, .cart-overlay, .auth-container, .welcome-section, .date-filter, .product-modal {
+                display: none !important;
+            }
+            .admin-dashboard {
+                background: none;
+                padding: 0;
+                margin: 0;
+                display: block !important;
+            }
+            .admin-section#orders, .admin-section#customers {
+                display: block !important;
+            }
+            .orders-table, .customers-table {
+                background: white;
+                width: 100%;
+                margin: 0;
+            }
+            .orders-table table, .customers-table table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 12pt;
+            }
+            .orders-table th, .orders-table td,
+            .customers-table th, .customers-table td {
+                border: 1px solid #ccc;
+                padding: 8px;
+                text-align: left;
+            }
+            .orders-table th, .customers-table th {
+                background: #f0f0f0;
+            }
+            .total-daily {
+                color: black;
+                font-size: 12pt;
+                margin-top: 20px;
+                text-align: right;
+            }
+            .print-header {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .print-header img {
+                width: 50px;
+                vertical-align: middle;
+                margin-right: 10px;
+            }
+            .print-header h1 {
+                font-size: 16pt;
+                display: inline;
+                color: black;
+            }
+            .print-date {
+                font-size: 12pt;
+                color: black;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .print-footer {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                font-size: 10pt;
+                color: #666;
+            }
+            .watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                opacity: 0.2;
+                z-index: -1;
+            }
+            .watermark img {
+                width: 300px;
+                height: 300px;
+            }
+            .print-receipt {
+                display: block !important;
+                background: white;
+                width: 100%;
+                margin: 0;
+            }
+            .print-items {
+                margin: 20px 0;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 12pt;
+            }
+            .print-items ul {
+                list-style: none;
+                padding: 0;
+            }
+            .print-items li {
+                margin-bottom: 8px;
+            }
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 15px;
+            }
+            .products-grid, .certificates-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .logo {
+                font-size: 1.8rem;
+            }
+            .welcome-section h1 {
+                font-size: 2.5rem;
+                margin-bottom: 15px;
+            }
+            .welcome-section p {
+                font-size: 1rem;
+                padding: 0 10px;
+            }
+            .products-grid, .certificates-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .product-card, .certificate-card {
+                padding: 20px;
+            }
+            .product-image {
+                height: 150px;
+                font-size: 2.5rem;
+            }
+            .certificate-card embed {
+                height: 300px;
+            }
+            .cart-sidebar, .product-modal-content {
+                width: 100%;
+                right: -100%;
+                padding: 20px;
+            }
+            .cart-icon {
+                width: 55px;
+                height: 55px;
+                bottom: 20px;
+                right: 20px;
+                font-size: 1.3rem;
+            }
+            .auth-form {
+                margin: 20px;
+                width: calc(100% - 40px);
+                padding: 30px 25px;
+            }
+            .admin-nav {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .admin-nav button {
+                flex: 1;
+                min-width: 120px;
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .stat-card {
+                padding: 15px;
+            }
+            .orders-table, .customers-table {
+                overflow-x: auto;
+            }
+            .orders-table table, .customers-table table {
+                min-width: 700px;
+            }
+            .orders-table th, .orders-table td,
+            .customers-table th, .customers-table td {
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+            .date-filter {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .date-filter input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            .header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            .logo {
+                font-size: 1.5rem;
+            }
+            .btn {
+                padding: 10px 18px;
+                font-size: 0.9rem;
+            }
+            .welcome-section h1 {
+                font-size: 2rem;
+                line-height: 1.2;
+            }
+            .welcome-section p {
+                font-size: 0.95rem;
+            }
+            .product-card, .certificate-card {
+                padding: 15px;
+                border-radius: 15px;
+            }
+            .product-image {
+                height: 120px;
+                font-size: 2rem;
+                border-radius: 10px;
+            }
+            .certificate-card embed {
+                height: 200px;
+            }
+            .product-info h3 {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+            .product-info p {
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+            }
+            .product-price {
+                font-size: 1.2rem;
+                margin-bottom: 10px;
+            }
+            .cart-sidebar {
+                padding: 15px;
+            }
+            .cart-item {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+                padding: 12px 0;
+            }
+            .cart-item > div:last-child {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .cart-icon {
+                width: 50px;
+                height: 50px;
+                bottom: 15px;
+                right: 15px;
+                font-size: 1.2rem;
+            }
+            .cart-count {
+                width: 22px;
+                height: 22px;
+                font-size: 0.75rem;
+            }
+            .auth-form, .product-modal-content {
+                margin: 10px;
+                width: calc(100% - 20px);
+                padding: 25px 20px;
+            }
+            .auth-form h2, .product-modal-content h2 {
+                font-size: 1.5rem;
+                margin-bottom: 25px;
+            }
+            .form-group input,
+            .form-group select,
+            .variant-group select {
+                padding: 12px;
+                font-size: 15px;
+            }
+            .admin-dashboard {
+                padding: 20px;
+            }
+            .admin-nav {
+                flex-direction: column;
+                gap: 8px;
+            }
+            .admin-nav button {
+                width: 100%;
+                padding: 12px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .stat-card {
+                padding: 12px;
+            }
+            .stat-number {
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+            }
+            .checkout-section {
+                margin-top: 20px;
+                padding-top: 15px;
+            }
+            .total-price {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+            .date-filter input {
+                width: 100%;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .welcome-section h1 {
+                font-size: 1.8rem;
+            }
+            .product-card, .certificate-card {
+                padding: 12px;
+            }
+            .product-image {
+                height: 100px;
+                font-size: 1.8rem;
+            }
+            .certificate-card embed {
+                height: 150px;
+            }
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.85rem;
+            }
+            .auth-form, .product-modal-content {
+                padding: 20px 15px;
+            }
+            .form-group input,
+            .form-group select,
+            .variant-group select {
+                padding: 10px;
+            }
+            .cart-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px;
+                padding: 12px 20px;
+            }
+            .cart-icon {
+                min-width: 50px;
+                min-height: 50px;
+            }
+            .form-group input,
+            .form-group select,
+            .variant-group select {
+                min-height: 44px;
+                padding: 12px 15px;
+            }
+            .close-btn {
+                min-width: 44px;
+                min-height: 44px;
+                padding: 10px;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .welcome-section {
+                margin-bottom: 20px;
+            }
+            .welcome-section h1 {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            .products-grid, .certificates-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .auth-form, .product-modal-content {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .product-card, .certificate-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .product-card:nth-child(1), .certificate-card:nth-child(1) { animation-delay: 0.1s; }
+        .product-card:nth-child(2), .certificate-card:nth-child(2) { animation-delay: 0.2s; }
+        .product-card:nth-child(3), .certificate-card:nth-child(3) { animation-delay: 0.3s; }
+        .product-card:nth-child(4), .certificate-card:nth-child(4) { animation-delay: 0.4s; }
+        .product-card:nth-child(5), .certificate-card:nth-child(5) { animation-delay: 0.5s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <nav class="nav">
+                <div class="logo">
+                    <i class="fas fa-shopping-bag"></i> BELANTARA
+                </div>
+                <div class="nav-buttons" id="navButtons">
+                    <button class="btn btn-secondary" onclick="showLogin()">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <button class="btn btn-primary" onclick="showRegister()">
+                        <i class="fas fa-user-plus"></i> Daftar
+                    </button>
+                </div>
+                <div class="nav-buttons" id="userNav" style="display: none;">
+                    <span id="userName" style="color: white; margin-right: 15px;"></span>
+                    <button class="btn btn-secondary" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Keluar
+                    </button>
+                </div>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <div class="welcome-section">
+                <h1>🛍️ Selamat Datang di BELANTARA</h1>
+                <p>PEMERINTAH  DESA  GINUNGGUNG KECAMATAN GALANG KABUPATEN  TOLITOLI  SULAWESI TENGAH</p>
+                <p>BADAN USAHA MILIK DESA ALFATIHA GINUNGGUNG</p>
+                <p>TERPADU RUMAH TANGGA KULINER MERDEKA</p>
+                <p>~ LAYANAN DIGITAL BELANJA LANGSUNG ANTAR ~</p> 
+            </div>
+
+            <div class="certificates-section">
+                <h3>📜 Sertifikat dan Izin Resmi</h3>
+                <div class="certificates-grid">
+                    <div class="certificate-card">
+                        <h4>PERIZINAN BERUSAHA BERBASIS RISIKO</h4>
+                        <embed src="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" type="application/pdf">
+                    </div>
+                    <div class="certificate-card">
+                        <h4>SERTIFIKAT HALAL</h4>
+                        <embed src="assets/certificates/SERTIFIKAT HALAL.pdf" type="application/pdf">
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section">
+                <h2>🍽️ Makanan</h2>
+                <div class="products-grid" id="foodGrid"></div>
+            </div>
+
+            <div class="category-section">
+                <h2>🥤 Minuman</h2>
+                <div class="products-grid" id="beverageGrid"></div>
+            </div>
+        </div>
+
+        <!-- Customer Dashboard -->
+        <div class="dashboard" id="customerDashboard">
+            <div class="welcome-section">
+                <h1>🏪 Dashboard Pelanggan</h1>
+                <p>Selamat berbelanja!</p>
+            </div>
+
+            <div class="certificates-section">
+                <h3>📜 Sertifikat dan Izin Resmi</h3>
+                <div class="certificates-grid">
+                    <div class="certificate-card">
+                        <h4>PERIZINAN BERUSAHA BERBASIS RISIKO</h4>
+                        <embed src="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" type="application/pdf">
+                    </div>
+                    <div class="certificate-card">
+                        <h4>SERTIFIKAT HALAL</h4>
+                        <embed src="assets/certificates/SERTIFIKAT HALAL.pdf" type="application/pdf">
+                    </div>
+                </div>
+            </div>
+
+            <div class="category-section">
+                <h2>🍽️ Makanan</h2>
+                <div class="products-grid" id="customerFoodGrid"></div>
+            </div>
+
+            <div class="category-section">
+                <h2>🥤 Minuman</h2>
+                <div class="products-grid" id="customerBeverageGrid"></div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard -->
+        <div class="admin-dashboard" id="adminDashboard">
+            <div class="welcome-section">
+                <h1>🏢 Dashboard Admin</h1>
+                <p>Kelola laporan penjualan dan pelanggan dengan mudah!</p>
+            </div>
+
+            <div class="admin-nav">
+                <button class="active" onclick="showAdminSection('overview')">Overview</button>
+                <button onclick="showAdminSection('orders')">Laporan Penjualan</button>
+                <button onclick="showAdminSection('customers')">Data Pelanggan</button>
+            </div>
+
+            <div class="admin-section active" id="overview">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalOrders">0</div>
+                        <div>Pesanan Hari Ini</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="storeRevenue">Rp 0</div>
+                        <div>Pendapatan Toko</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="shippingRevenue">Rp 0</div>
+                        <div>Komisi Ongkir</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCustomers">0</div>
+                        <div>Total Pelanggan</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section" id="orders">
+                <h3 style="color: white; margin-bottom: 20px;">Laporan Penjualan Harian</h3>
+                <div class="date-filter">
+                    <label>Pilih Tanggal:</label>
+                    <input type="date" id="dateFilter" onchange="loadOrders()">
+                    <button class="btn btn-primary" onclick="printReport()">
+                        <i class="fas fa-print"></i> Cetak Laporan
+                    </button>
+                </div>
+                <div class="orders-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID Pesanan</th>
+                                <th>Pelanggan</th>
+                                <th>Subtotal</th>
+                                <th>Komisi Ongkir</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersList">
+                            <!-- Orders will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-daily" id="dailyTotals"></div>
+            </div>
+
+            <div class="admin-section" id="customers">
+                <h3 style="color: white; margin-bottom: 20px;">Data Pelanggan</h3>
+                <div class="customers-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nama</th>
+                                <th>Email</th>
+                                <th>No. HP</th>
+                                <th>Tanggal Bergabung</th>
+                            </tr>
+                        </thead>
+                        <tbody id="customersList">
+                            <!-- Customers will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-daily" id="customerTotals"></div>
+            </div>
+        </div>
+
+        <!-- Print Container (Hidden) -->
+        <div id="printContainer" style="display: none;">
+            <div class="print-header">
+                <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb424?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Logo BELANTARA">
+                <h1>Laporan Penjualan Harian BELANTARA</h1>
+            </div>
+            <div class="print-date" id="printDate"></div>
+            <div class="orders-table">
+                <table id="printTable">
+                    <thead>
+                        <tr>
+                            <th>ID Pesanan</th>
+                            <th>Pelanggan</th>
+                            <th>Subtotal</th>
+                            <th>Komisi Ongkir</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="printOrdersList"></tbody>
+                </table>
+            </div>
+            <div class="total-daily" id="printDailyTotals"></div>
+            <div class="print-footer" id="printFooter"></div>
+            <div class="watermark">
+                <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb424?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Watermark BELANTARA">
+            </div>
+        </div>
+
+        <!-- Customers Print Container (Hidden) -->
+        <div id="customersPrintContainer" style="display: none;">
+            <div class="print-header">
+                <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb424?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Logo BELANTARA">
+                <h1>Laporan Data Pelanggan BELANTARA</h1>
+            </div>
+            <div class="print-date" id="customersPrintDate"></div>
+            <div class="customers-table">
+                <table id="customersPrintTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama</th>
+                            <th>Email</th>
+                            <th>No. HP</th>
+                            <th>Tanggal Bergabung</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersPrintList"></tbody>
+                </table>
+            </div>
+            <div class="total-daily" id="customersPrintTotals"></div>
+            <div class="print-footer" id="customersPrintFooter"></div>
+            <div class="watermark">
+                <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb424?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Watermark BELANTARA">
+            </div>
+        </div>
+
+        <!-- Receipt Print Container (Hidden) -->
+        <div id="receiptContainer" style="display: none;">
+            <div class="print-header">
+                <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb424?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="Logo BELANTARA">
+                <h1>Resi Pembelian BELANTARA</h1>
+            </div>
+            <div class="print-date" id="receiptDate"></div>
+            <div class="print-receipt">
+                <div id="receiptDetails"></div>
+                <div class="print-items">
+                    <h3>Detail Pesanan</h3>
+                    <ul id="receiptItems"></ul>
+                </div>
+                <div class="total-daily" id="receiptTotals"></div>
+            </div>
+            <div class="print-footer" id="receiptFooter"></div>
+            <div class="watermark">
+                <img src="https://images.unsplash.com/photo-1581235720704-06d3acfcb424?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Watermark BELANTARA">
+            </div>
+        </div>
+
+        <!-- Product Modal -->
+        <div class="product-modal" id="productModal">
+            <div class="product-modal-content">
+                <button class="close-btn" onclick="closeProductModal()">×</button>
+                <h2 id="modalProductName"></h2>
+                <div class="variant-group">
+                    <label>Pilih Varian</label>
+                    <select id="variantSelect" required>
+                        <!-- Variants will be loaded here -->
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="addToCartWithVariant()">
+                    <i class="fas fa-cart-plus"></i> Tambahkan ke Keranjang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shopping Cart -->
+    <div class="cart-icon customer-only" id="cartIcon" onclick="toggleCart()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <button class="close-btn" onclick="toggleCart()">
+            <i class="fas fa-times"></i>
+        </button>
+        <h3>🛒 Keranjang Belanja</h3>
+        <div id="cartItems">
+            <!-- Cart items will be displayed here -->
+        </div>
+        <div class="checkout-section">
+            <div class="total-price" id="totalPrice">Total: Rp 0</div>
+            <div class="address-input">
+                <label>Pilih Alamat Pengiriman</label>
+                <select id="deliveryAddress" required>
+                    <option value="" disabled selected>Pilih alamat</option>
+                    <option value="Aung">Aung</option>
+                    <option value="Bajugan">Bajugan</option>
+                    <option value="Ginunggung">Ginunggung</option>
+                    <option value="Kalangkangan">Kalangkangan</option>
+                    <option value="Kinopasan">Kinopasan</option>
+                    <option value="Lakatan">Lakatan</option>
+                    <option value="Lalos">Lalos</option>
+                    <option value="Lantapan">Lantapan</option>
+                    <option value="Malangga">Malangga</option>
+                    <option value="Ogomoli">Ogomoli</option>
+                    <option value="Sabang">Sabang</option>
+                    <option value="Sandana">Sandana</option>
+                    <option value="Tende">Tende</option>
+                    <option value="Tinigi">Tinigi</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="checkout()">
+                <i class="fas fa-check"></i> Checkout
+            </button>
+        </div>
+    </div>
+
+    <!-- Auth Forms -->
+    <div class="auth-container" id="authContainer">
+        <!-- Login Form -->
+        <div class="auth-form" id="loginForm">
+            <button class="close-btn" onclick="hideAuth()">×</button>
+            <h2>Login</h2>
+            <form onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label>Email atau No. HP</label>
+                    <input type="text" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <div class="user-type-group">
+                    <label>
+                        <input type="radio" name="userType" value="customer" checked> Pelanggan
+                    </label>
+                    <label>
+                        <input type="radio" name="userType" value="admin"> Admin
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Masuk
+                </button>
+            </form>
+            <p style="margin-top: 20px;">
+                Belum punya akun? <a href="#" onclick="showRegister()" style="color: #ff6f00;">Daftar di sini</a>
+            </p>
+        </div>
+
+        <!-- Register Form -->
+        <div class="auth-form" id="registerForm" style="display: none;">
+            <button class="close-btn" onclick="hideAuth()">×</button>
+            <h2>📝 Daftar Akun</h2>
+            <form onsubmit="return handleRegister(event)">
+                <div class="form-group">
+                    <label>Nama Lengkap (sesuai KTP)</label>
+                    <input type="text" id="regName" required>
+                </div>
+                <div class="form-group">
+                    <label>No. HP</label>
+                    <input type="tel" id="regPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <div class="form-group">
+                    <label>Konfirmasi Password</label>
+                    <input type="password" id="regConfirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Daftar
+                </button>
+            </form>
+            <p style="text-align: center; margin-top: 20px;">
+                Sudah punya akun? <a href="#" onclick="showLogin()" style="color: #ff6f00;">Login di sini</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Hardcoded product data with variants and categories
+        const products = [
+            {
+                id: 1,
+                name: "ANEKA KUE TRADISIONAL",
+                price: 10000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "082271624019",
+                image: "assets/image/aneka kue tradisional.png",
+                category: "food",
+                variants: [
+                    { name: "CUCUR", additionalPrice: 0 },
+                    { name: "WINGKO G4", additionalPrice: 0 },
+                    { name: "SURABENG", additionalPrice: 0 },
+                    { name: "TETU NIPA", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 21,
+                name: "PISANG GORENG KEMBUNG",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "082271624019",
+                image: "assets/image/pisang goreng kembung.png",
+                category: "food",
+                variants: [
+                    { name: "FLA COKLAT TOPING + SERUTAN COKLAT", additionalPrice: 0 },
+                    { name: "FLA COKLAT TOPING + SERUTAN KEJU", additionalPrice: 0 },
+                    { name: "FLA STRAWBERRY + SERUTAN COKLAT", additionalPrice: 0 },
+                    { name: "FLA STRAWBERRY + SERUTAN KEJU", additionalPrice: 0 },
+                    { name: "FLA TARO + SERUTAN COKLAT", additionalPrice: 0 },
+                    { name: "FLA TARO + SERUTAN KEJU", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 22,
+                name: "KEBAB",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "082271624019",
+                image: "assets/image/kebab.png",
+                category: "food",
+                variants: [
+                    { name: "NORMAL", additionalPrice: 0 },
+                    { name: "EKSTRA PEDAS", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 24,
+                name: "MARTABAK TELUR MINI",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "082271624019",
+                image: "assets/image/martabak telur mini.png",
+                category: "food",
+                variants: [
+                    { name: "-", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 25,
+                name: "AMBAL",
+                price: 10000,
+                description: "-",
+                seller: "BUMDES",
+                whatsapp: "082271624019",
+                image: "assets/image/ambal.png",
+                category: "food",
+                variants: [
+                    { name: "-", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 2,
+                name: "BAKSO",
+                price: 15000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "085213714251",
+                image: "assets/image/bakso.jpg",
+                category: "food",
+                variants: [
+                    { name: "PAKAI TELUR", additionalPrice: 3000 },
+                    { name: "TANPA TELUR", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 4,
+                name: "GADO-GADO",
+                price: 12000,
+                description: "-",
+                seller: "NY. KAMRIA",
+                whatsapp: "082271624019",
+                image: "assets/image/gado-gado.jpeg",
+                category: "food",
+                variants: [
+                    { name: "PAKAI TELUR", additionalPrice: 3000 },
+                    { name: "TANPA TELUR", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 5,
+                name: "SOTO AYAM",
+                price: 12000,
+                description: "-",
+                seller: "NY. KAMRIA",
+                whatsapp: "085213714252",
+                image: "assets/image/soto_ayam_bumbu_kuning.jpg",
+                category: "food",
+                variants: [
+                    { name: "PAKAI TELUR", additionalPrice: 3000 },
+                    { name: "TANPA TELUR", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 18,
+                name: "KARI TAHU LONTONG",
+                price: 12000,
+                description: "-",
+                seller: "NY. KAMRIA",
+                whatsapp: "085213714252",
+                image: "assets/image/kari tahu lontong.png",
+                category: "food",
+                variants: [
+                    { name: "PAKAI TELUR", additionalPrice: 3000 },
+                    { name: "TANPA TELUR", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 20,
+                name: "MI GORENG",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/mi goreng seafood.png",
+                category: "food",
+                variants: [
+                    { name: "PAKAI UDANG", additionalPrice: 5000 },
+                    { name: "TANPA UDANG", additionalPrice: 0 }
+                ]
+            },
+            
+            {
+                id: 19,
+                name: "NASI GORENG",
+                price: 15000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "085213714251",
+                image: "assets/image/nasi goreng.png",
+                category: "food",
+                variants: [
+                    { name: "NORMAL", additionalPrice: 0 },
+                    { name: "EKSTRA PEDAS", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 23,
+                name: "NASI KUNING",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/nasi kuning.png",
+                category: "food",
+                variants: [
+                    { name: "AYAM", additionalPrice: 5000 },
+                    { name: "IKAN", additionalPrice: 0 },
+                    { name: "TELUR", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 3,
+                name: "NASI LALAPAN",
+                price: 15000,
+                description: "-",
+                seller: "NY. KAMRIA",
+                whatsapp: "085213714251",
+                image: "assets/image/nasi_ayam_lalapan.jpeg",
+                category: "food",
+                variants: [
+                    { name: "AYAM", additionalPrice: 5000 },
+                    { name: "TAHU", additionalPrice: 0 },
+                    { name: "TAHU TEMPE", additionalPrice: 0 },
+                    { name: "TEMPE", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 6,
+                name: "NASI IKAN BAKAR",
+                price: 15000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "082271624019",
+                image: "assets/image/nasi ikan bakar.jpg",
+                category: "food",
+                variants: [
+                    { name: "IKAN BANDENG", additionalPrice: 0 },
+                    { name: "IKAN KATOMBO", additionalPrice: 0 },
+                    { name: "IKAN BUBARA", additionalPrice: 10000 },
+                    { name: "IKAN KATAMBA", additionalPrice: 10000 }
+                ]
+            },
+            {
+                id: 7,
+                name: "IKAN BANDENG PRESTO",
+                price: 15000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "082271624019",
+                image: "assets/image/ikan bandeng presto.png",
+                category: "food",
+                variants: [
+                    { name: "PAKAI NASI", additionalPrice: 0 },
+                    { name: "TANPA NASI", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 8,
+                name: "JUS ANEKA REMPAH NUSANTARA",
+                price: 3000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "082271624019",
+                image: "assets/image/jus rempah nusantara.png",
+                category: "beverage",
+                variants: [
+                    { name: "JUS CENGKEH", additionalPrice: 0 },
+                    { name: "JUS DAUN SALAM", additionalPrice: 0 },
+                    { name: "JUS KAPULAGA", additionalPrice: 0 },
+                    { name: "JUS KAYU MANIS", additionalPrice: 0 },
+                    { name: "JUS KUNYIT", additionalPrice: 0 },
+                    { name: "JUS LIDAH BUAYA", additionalPrice: 2000 },
+                    { name: "JUS PALA", additionalPrice: 0 },
+                    { name: "JUS SERAI", additionalPrice: 0 },
+                    { name: "JUS TELANG", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 9,
+                name: "JUS ANEKA REMPAH MADU PLUS SUSU KAMBING ETAWA",
+                price: 15000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "082271624019",
+                image: "assets/image/jus aneka rempah madu plus susu kambing etawa.png",
+                category: "beverage",
+                variants: [
+                    { name: "JUS CENGKEH", additionalPrice: 0 },
+                    { name: "JUS DAUN SALAM", additionalPrice: 0 },
+                    { name: "JUS KAPULAGA", additionalPrice: 0 },
+                    { name: "JUS KAYU MANIS", additionalPrice: 0 },
+                    { name: "JUS KUNYIT", additionalPrice: 0 },
+                    { name: "JUS LIDAH BUAYA", additionalPrice: 0 },
+                    { name: "JUS PALA", additionalPrice: 0 },
+                    { name: "JUS SERAI", additionalPrice: 0 },
+                    { name: "JUS TELANG", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 10,
+                name: "JUS ALPUKAT",
+                price: 10000,
+                description: "-",
+                seller: "NY. YUNIATI",
+                whatsapp: "082271624019",
+                image: "assets/image/jus alpukat.jpg",
+                category: "beverage",
+                variants: [
+                    { name: "BIASA", additionalPrice: 0 },
+                    { name: "TANPA GULA", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 11,
+                name: "JUS BUAH NAGA",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/jus buah naga.png",
+                category: "beverage",
+                variants: [
+                    { name: "BIASA", additionalPrice: 0 },
+                    { name: "TANPA GULA", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 12,
+                name: "JUS JERUK",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/jus jeruk.png",
+                category: "beverage",
+                variants: [
+                    { name: "BIASA", additionalPrice: 0 },
+                    { name: "TANPA GULA", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 13,
+                name: "TEH O'",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/teh o'.png",
+                category: "beverage",
+                variants: [
+                    { name: "Panas", additionalPrice: 0 },
+                    { name: "Dingin", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 14,
+                name: "KOPI O'",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/kopi o'.png",
+                category: "beverage",
+                variants: [
+                    { name: "Panas", additionalPrice: 0 },
+                    { name: "Dingin", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 15,
+                name: "KOPI SUSU",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/kopi susu.png",
+                category: "beverage",
+                variants: [
+                    { name: "Panas", additionalPrice: 0 },
+                    { name: "Dingin", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 16,
+                name: "KOPI JAHE",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/kopi jahe.png",
+                category: "beverage",
+                variants: [
+                    { name: "Panas", additionalPrice: 0 },
+                    { name: "Dingin", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 17,
+                name: "SARABBA",
+                price: 10000,
+                description: "-",
+                seller: "NY. SARINI",
+                whatsapp: "085213714251",
+                image: "assets/image/sarabba.png",
+                category: "beverage",
+                variants: [
+                    { name: "-", additionalPrice: 0 }
+                ]
+            }
+        ];
+
+        // Hardcoded address data with shipping costs, sorted alphabetically
+        const addresses = [
+            { name: "Aung", shippingCost: 5000 },
+            { name: "Bajugan", shippingCost: 5000 },
+            { name: "Ginunggung", shippingCost: 3000 },
+            { name: "Kalangkangan", shippingCost: 3000 },
+            { name: "Kinopasan", shippingCost: 5000 },
+            { name: "Lakatan", shippingCost: 5000 },
+            { name: "Lalos", shippingCost: 3000 },
+            { name: "Lantapan", shippingCost: 5000 },
+            { name: "Malangga", shippingCost: 5000 },
+            { name: "Ogomoli", shippingCost: 5000 },
+            { name: "Sabang", shippingCost: 5000 },
+            { name: "Sandana", shippingCost: 5000 },
+            { name: "Tende", shippingCost: 5000 },
+            { name: "Tinigi", shippingCost: 5000 }
+        ];
+
+        // Hardcoded admin WhatsApp number for notifications
+        const adminWhatsApp = "08271624019";
+
+        // Load data from localStorage for cart, customers, and orders
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let customers = JSON.parse(localStorage.getItem('customers')) || [];
+        let orders = JSON.parse(localStorage.getItem('orders')) || [];
+        let selectedProductId = null;
+
+        // Custom events for updates
+        const orderUpdateEvent = new Event('orderUpdated');
+        const customerUpdateEvent = new Event('customerUpdated');
+
+        // Format currency
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Convert local number (08) to international format (+62)
+        function convertToInternationalNumber(localNumber) {
+            if (localNumber.startsWith('08')) {
+                return '+62' + localNumber.substring(1);
+            }
+            return localNumber;
+        }
+
+        // Load products
+        function loadProducts() {
+            const foodGrid = document.getElementById('foodGrid');
+            const beverageGrid = document.getElementById('beverageGrid');
+            const customerFoodGrid = document.getElementById('customerFoodGrid');
+            const customerBeverageGrid = document.getElementById('customerBeverageGrid');
+
+            const renderProducts = (products, grid, isCustomer) => {
+                if (grid) {
+                    grid.innerHTML = products.map(product => `
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="${product.image}" alt="${product.name}">
+                            </div>
+                            <div class="product-info">
+                                <h3>${product.name}</h3>
+                                <p>${product.description}</p>
+                                <div class="product-price">${formatCurrency(product.price)}</div>
+                                ${isCustomer && currentUser && currentUser.type === 'customer' ? 
+                                    `<button class="btn btn-primary" onclick="showProductModal(${product.id})">
+                                        <i class="fas fa-cart-plus"></i> Pilih Varian
+                                    </button>` : ''
+                                }
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            };
+
+            const foodProducts = products.filter(p => p.category === 'food');
+            const beverageProducts = products.filter(p => p.category === 'beverage');
+
+            renderProducts(foodProducts, foodGrid, false);
+            renderProducts(beverageProducts, beverageGrid, false);
+            renderProducts(foodProducts, customerFoodGrid, true);
+            renderProducts(beverageProducts, customerBeverageGrid, true);
+        }
+
+        // Product Modal functions
+        function showProductModal(productId) {
+            selectedProductId = productId;
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            document.getElementById('modalProductName').textContent = product.name;
+            const variantSelect = document.getElementById('variantSelect');
+            variantSelect.innerHTML = product.variants.map(variant => `
+                <option value="${variant.name}" data-price="${variant.additionalPrice}">
+                    ${variant.name} (+${formatCurrency(variant.additionalPrice)})
+                </option>
+            `).join('');
+            document.getElementById('productModal').style.display = 'flex';
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').style.display = 'none';
+            selectedProductId = null;
+        }
+
+        function addToCartWithVariant() {
+            if (!selectedProductId) return;
+
+            const product = products.find(p => p.id === selectedProductId);
+            const variantSelect = document.getElementById('variantSelect');
+            const selectedVariantName = variantSelect.value;
+            const selectedVariant = product.variants.find(v => v.name === selectedVariantName);
+            if (!selectedVariant) {
+                alert('Harap pilih varian!');
+                return;
+            }
+
+            const cartItem = {
+                ...product,
+                variant: selectedVariant.name,
+                price: product.price + selectedVariant.additionalPrice,
+                quantity: 1
+            };
+
+            const existingItem = cart.find(item => item.id === product.id && item.variant === selectedVariant.name);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push(cartItem);
+            }
+
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            closeProductModal();
+
+            const btn = document.querySelector(`button[onclick="showProductModal(${product.id})"]`);
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Ditambahkan!';
+            btn.style.background = '#ff6f00';
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 1000);
+        }
+
+        // Authentication functions
+        function showLogin() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('registerForm').style.display = 'none';
+        }
+
+        function showRegister() {
+            document.getElementById('authContainer').style.display = 'flex';
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        function hideAuth() {
+            document.getElementById('authContainer').style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const userType = document.querySelector('input[name="userType"]:checked').value;
+
+            if (userType === 'admin' && email === 'admin' && password === 'putripunya') {
+                currentUser = { name: 'Putripuspitasari', type: 'admin', email: email };
+                showAdminDashboard();
+            } else if (userType === 'customer') {
+                const customer = customers.find(c => c.email === email || c.phone === email);
+                if (customer && customer.password === password) {
+                    currentUser = { ...customer, type: 'customer' };
+                    showCustomerDashboard();
+                } else {
+                    alert('Email/No.HP atau password salah!');
+                    return false;
+                }
+            } else {
+                alert('Login gagal! Periksa kembali data Anda.');
+                return false;
+            }
+
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            hideAuth();
+            updateNavigation();
+            updateCartVisibility();
+            return false;
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('regName').value;
+            const phone = document.getElementById('regPhone').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                alert('Password dan konfirmasi password tidak sama!');
+                return false;
+            }
+
+            if (customers.find(c => c.email === email || c.phone === phone)) {
+                alert('Email atau nomor HP sudah terdaftar!');
+                return false;
+            }
+
+            const newCustomer = {
+                id: customers.length + 1,
+                name: name,
+                phone: phone,
+                email: email,
+                password: password,
+                joinDate: new Date().toLocaleDateString('id-ID')
+            };
+
+            customers.push(newCustomer);
+            localStorage.setItem('customers', JSON.stringify(customers));
+            document.dispatchEvent(customerUpdateEvent);
+            alert('Pendaftaran berhasil! Silakan login.');
+            showLogin();
+            return false;
+        }
+
+        function logout() {
+            currentUser = null;
+            cart = [];
+            localStorage.setItem('currentUser', null);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            updateNavigation();
+            updateCartVisibility();
+            showMainContent();
+        }
+
+        function updateNavigation() {
+            const navButtons = document.getElementById('navButtons');
+            const userNav = document.getElementById('userNav');
+            const userName = document.getElementById('userName');
+
+            if (currentUser) {
+                navButtons.style.display = 'none';
+                userNav.style.display = 'flex';
+                userName.textContent = `👋 ${currentUser.name}`;
+            } else {
+                navButtons.style.display = 'flex';
+                userNav.style.display = 'none';
+            }
+        }
+
+        function updateCartVisibility() {
+            const cartIcon = document.getElementById('cartIcon');
+            if (currentUser && currentUser.type === 'customer') {
+                cartIcon.classList.add('customer-only');
+            } else {
+                cartIcon.classList.remove('customer-only');
+            }
+        }
+
+        function showMainContent() {
+            document.getElementById('mainContent').style.display = 'block';
+            document.getElementById('customerDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+            loadProducts();
+        }
+
+        function showCustomerDashboard() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('customerDashboard').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'none';
+            loadProducts();
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('mainContent').style.display = 'none';
+            document.getElementById('customerDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'block';
+            loadOrders();
+            loadCustomers();
+            showAdminSection('overview');
+        }
+
+        function showAdminSection(section) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.admin-nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(section).classList.add('active');
+            document.querySelector(`.admin-nav button[onclick="showAdminSection('${section}')"]`).classList.add('active');
+        }
+
+        // Cart functions
+        function removeFromCart(productId, variant) {
+            cart = cart.filter(item => !(item.id === productId && item.variant === variant));
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateQuantity(productId, variant, change) {
+            const item = cart.find(item => item.id === productId && item.variant === variant);
+            if (item) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    removeFromCart(productId, variant);
+                } else {
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCartUI();
+                }
+            }
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('cartItems');
+            const totalPrice = document.getElementById('totalPrice');
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const uniqueSellers = [...new Set(cart.map(item => item.seller))];
+            const selectedAddress = addresses.find(addr => addr.name === deliveryAddress);
+            const shippingCost = selectedAddress ? uniqueSellers.length * selectedAddress.shippingCost : 0;
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalAmount = subtotal + shippingCost;
+
+            cartCount.textContent = totalItems;
+            totalPrice.textContent = `Total: ${formatCurrency(totalAmount)}`;
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = `
+                    <div style="text-align: center; color: #666; padding: 40px 20px;">
+                        <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p>Keranjang kosong</p>
+                        <p style="font-size: 0.9rem; margin-top: 10px;">Mulai berbelanja sekarang!</p>
+                    </div>
+                `;
+            } else {
+                cartItems.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div style="flex: 1;">
+                            <h4 style="margin-bottom: 5px; font-size: 1rem;">${item.name} (${item.variant})</h4>
+                            <p style="color: #666; margin-bottom: 3px; font-size: 0.9rem;">${formatCurrency(item.price)}</p>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+                            <button onclick="updateQuantity(${item.id}, '${item.variant}', -1)" 
+                                style="background: #e74c3c; color: white; border: none; border-radius: 50%; 
+                                width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; 
+                                justify-content: center; font-size: 0.9rem;">-</button>
+                            <span style="font-weight: bold; min-width: 25px; text-align: center;">${item.quantity}</span>
+                            <button onclick="updateQuantity(${item.id}, '${item.variant}', 1)" 
+                                style="background: #27ae60; color: white; border: none; border-radius: 50%; 
+                                width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; 
+                                justify-content: center; font-size: 0.9rem;">+</button>
+                            <button onclick="removeFromCart(${item.id}, '${item.variant}')" 
+                                style="background: #e74c3c; color: white; border: none; padding: 6px 10px; 
+                                border-radius: 5px; cursor: pointer; font-size: 0.8rem; margin-left: 10px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function toggleCart() {
+            const cartSidebar = document.getElementById('cartSidebar');
+            const cartOverlay = document.getElementById('cartOverlay');
+            
+            cartSidebar.classList.toggle('open');
+            cartOverlay.classList.toggle('show');
+            
+            if (cartSidebar.classList.contains('open')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Keranjang belanja kosong!');
+                return;
+            }
+
+            const deliveryAddress = document.getElementById('deliveryAddress').value;
+            if (!deliveryAddress) {
+                alert('Harap pilih alamat pengiriman!');
+                return;
+            }
+
+            const selectedAddress = addresses.find(addr => addr.name === deliveryAddress);
+            if (!selectedAddress) {
+                alert('Alamat pengiriman tidak valid!');
+                return;
+            }
+
+            const uniqueSellers = [...new Set(cart.map(item => item.seller))];
+            const shippingCost = uniqueSellers.length * selectedAddress.shippingCost;
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const totalAmount = subtotal + shippingCost;
+
+            const orderId = `ORD${Date.now()}`;
+            const orderDate = new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Makassar', 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            const itemsList = cart.map(item => 
+                `${item.name} (${item.variant}) (${item.quantity}x) - ${formatCurrency(item.price * item.quantity)}`
+            ).join('\n');
+            const adminMessage = `Notifikasi Pesanan Baru\n\nID Pesanan: ${orderId}\nPelanggan: ${currentUser.name}\nAlamat: ${deliveryAddress}\nNo. HP: ${currentUser.phone || 'Belum diisi'}\n\nDetail Pesanan:\n${itemsList}\n\nRincian:\n- Subtotal: ${formatCurrency(subtotal)}\n- Ongkir: ${formatCurrency(shippingCost)}\n- Total: ${formatCurrency(totalAmount)}\n\nTanggal: ${orderDate}\n\n*Harap konfirmasi pesanan ini.*`;
+            const adminWhatsAppUrl = `https://wa.me/${convertToInternationalNumber(adminWhatsApp)}?text=${encodeURIComponent(adminMessage)}`;
+            window.open(adminWhatsAppUrl, '_blank');
+
+            const newOrder = {
+                id: orderId,
+                customer: currentUser.name,
+                customerId: currentUser.id,
+                subtotal: subtotal,
+                shippingCost: shippingCost,
+                total: totalAmount,
+                status: 'Menunggu Konfirmasi',
+                date: orderDate,
+                address: deliveryAddress,
+                items: cart.map(item => ({ ...item }))
+            };
+            orders.push(newOrder);
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Trigger order update event
+            document.dispatchEvent(orderUpdateEvent);
+
+            cart = [];
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            toggleCart();
+            alert('Pesanan telah dikirim ke WhatsApp admin untuk konfirmasi.');
+        }
+
+        function updateStats() {
+            const today = new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Makassar', 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            }).split(' ')[0];
+            const todayOrders = orders.filter(order => {
+                const orderDate = order.date.split(' ')[0];
+                return orderDate === today;
+            });
+
+            const totalOrders = todayOrders.length;
+            const storeRevenue = todayOrders.reduce((sum, o) => sum + o.subtotal, 0);
+            const shippingRevenue = todayOrders.reduce((sum, o) => sum + o.shippingCost, 0);
+            const totalCustomers = customers.length;
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('storeRevenue').textContent = formatCurrency(storeRevenue);
+            document.getElementById('shippingRevenue').textContent = formatCurrency(shippingRevenue);
+            document.getElementById('totalCustomers').textContent = totalCustomers;
+        }
+
+        function loadOrders() {
+            const dateFilter = document.getElementById('dateFilter');
+            const selectedDate = dateFilter ? dateFilter.value : new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Makassar', 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            }).split(' ')[0].split('/').reverse().join('-');
+            
+            const formattedSelectedDate = selectedDate ? 
+                selectedDate.split('-').reverse().join('/') : 
+                new Date().toLocaleString('id-ID', { 
+                    timeZone: 'Asia/Makassar', 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                }).split(' ')[0];
+
+            const ordersList = document.getElementById('ordersList');
+            const dailyTotals = document.getElementById('dailyTotals');
+
+            const filteredOrders = orders.filter(order => {
+                const orderDate = order.date.split(' ')[0];
+                return orderDate === formattedSelectedDate;
+            });
+
+            ordersList.innerHTML = filteredOrders.map(order => `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${formatCurrency(order.subtotal)}</td>
+                    <td>${formatCurrency(order.shippingCost)}</td>
+                    <td>${formatCurrency(order.total)}</td>
+                    <td>
+                        <select onchange="updateOrderStatus('${order.id}', this.value)">
+                            <option value="Menunggu Konfirmasi" ${order.status === 'Menunggu Konfirmasi' ? 'selected' : ''}>Menunggu Konfirmasi</option>
+                            <option value="Dalam Proses" ${order.status === 'Dalam Proses' ? 'selected' : ''}>Dalam Proses</option>
+                            <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                            <option value="Dibatalkan" ${order.status === 'Dibatalkan' ? 'selected' : ''}>Dibatalkan</option>
+                        </select>
+                    </td>
+                    <td>${order.date}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="printReceipt('${order.id}')">
+                            <i class="fas fa-print"></i> Cetak Resi
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            const totalSubtotal = filteredOrders.reduce((sum, o) => sum + o.subtotal, 0);
+            const totalShipping = filteredOrders.reduce((sum, o) => sum + o.shippingCost, 0);
+            const totalAll = totalSubtotal + totalShipping;
+
+            dailyTotals.innerHTML = `
+                Total Harian: 
+                Subtotal: ${formatCurrency(totalSubtotal)} | 
+                Komisi Ongkir: ${formatCurrency(totalShipping)} | 
+                Total: ${formatCurrency(totalAll)}
+            `;
+            updateStats();
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                localStorage.setItem('orders', JSON.stringify(orders));
+                loadOrders();
+                document.dispatchEvent(orderUpdateEvent);
+            }
+        }
+
+        function loadCustomers() {
+            const customersList = document.getElementById('customersList');
+            const customerTotals = document.getElementById('customerTotals');
+
+            customersList.innerHTML = customers.map(customer => `
+                <tr>
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.joinDate}</td>
+                </tr>
+            `).join('');
+
+            customerTotals.innerHTML = `Total Pelanggan: ${customers.length}`;
+        }
+
+        function printReport() {
+            const dateFilter = document.getElementById('dateFilter');
+            const selectedDate = dateFilter ? dateFilter.value : new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Makassar', 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric' 
+            }).split(' ')[0].split('/').reverse().join('-');
+            
+            const formattedSelectedDate = selectedDate ? 
+                selectedDate.split('-').reverse().join('/') : 
+                new Date().toLocaleString('id-ID', { 
+                    timeZone: 'Asia/Makassar', 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                }).split(' ')[0];
+
+            const filteredOrders = orders.filter(order => {
+                const orderDate = order.date.split(' ')[0];
+                return orderDate === formattedSelectedDate;
+            });
+
+            const printOrdersList = document.getElementById('printOrdersList');
+            const printDailyTotals = document.getElementById('printDailyTotals');
+            const printDate = document.getElementById('printDate');
+            const printFooter = document.getElementById('printFooter');
+
+            printOrdersList.innerHTML =
+                        filteredOrders.map(order => `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.customer}</td>
+                    <td>${formatCurrency(order.subtotal)}</td>
+                    <td>${formatCurrency(order.shippingCost)}</td>
+                    <td>${formatCurrency(order.total)}</td>
+                    <td>${order.status}</td>
+                    <td>${order.date}</td>
+                </tr>
+            `).join('');
+
+            const totalSubtotal = filteredOrders.reduce((sum, o) => sum + o.subtotal, 0);
+            const totalShipping = filteredOrders.reduce((sum, o) => sum + o.shippingCost, 0);
+            const totalAll = totalSubtotal + totalShipping;
+
+            printDailyTotals.innerHTML = `
+                Total Harian: 
+                Subtotal: ${formatCurrency(totalSubtotal)} | 
+                Komisi Ongkir: ${formatCurrency(totalShipping)} | 
+                Total: ${formatCurrency(totalAll)}
+            `;
+            printDate.textContent = `Tanggal: ${formattedSelectedDate}`;
+            printFooter.textContent = `Dicetak pada: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' })}`;
+
+            window.print();
+        }
+
+        function printReceipt(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            const receiptDate = document.getElementById('receiptDate');
+            const receiptDetails = document.getElementById('receiptDetails');
+            const receiptItems = document.getElementById('receiptItems');
+            const receiptTotals = document.getElementById('receiptTotals');
+            const receiptFooter = document.getElementById('receiptFooter');
+
+            receiptDate.textContent = `Tanggal: ${order.date}`;
+            receiptDetails.innerHTML = `
+                ID Pesanan: ${order.id}<br>
+                Pelanggan: ${order.customer}<br>
+                Alamat Pengiriman: ${order.address}<br>
+                No. HP: ${customers.find(c => c.id === order.customerId)?.phone || 'Tidak tersedia'}
+            `;
+            receiptItems.innerHTML = order.items.map(item => `
+                <li>${item.name} (${item.variant}) (${item.quantity}x) - ${formatCurrency(item.price * item.quantity)}</li>
+            `).join('');
+            receiptTotals.innerHTML = `
+                Subtotal: ${formatCurrency(order.subtotal)}<br>
+                Komisi Ongkir: ${formatCurrency(order.shippingCost)}<br>
+                Total: ${formatCurrency(order.total)}
+            `;
+            receiptFooter.textContent = `Dicetak pada: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' })}`;
+
+            window.print();
+        }
+
+        function printCustomersReport() {
+            const customersPrintList = document.getElementById('customersPrintList');
+            const customersPrintDate = document.getElementById('customersPrintDate');
+            const customersPrintTotals = document.getElementById('customersPrintTotals');
+            const customersPrintFooter = document.getElementById('customersPrintFooter');
+
+            customersPrintList.innerHTML = customers.map(customer => `
+                <tr>
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.email}</td>
+                    <td>${customer.phone}</td>
+                    <td>${customer.joinDate}</td>
+                </tr>
+            `).join('');
+            customersPrintDate.textContent = `Tanggal: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar', day: '2-digit', month: '2-digit', year: 'numeric' })}`;
+            customersPrintTotals.textContent = `Total Pelanggan: ${customers.length}`;
+            customersPrintFooter.textContent = `Dicetak pada: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Makassar' })}`;
+
+            window.print();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts();
+            updateNavigation();
+            updateCartVisibility();
+            updateCartUI();
+
+            if (currentUser) {
+                if (currentUser.type === 'admin') {
+                    showAdminDashboard();
+                } else if (currentUser.type === 'customer') {
+                    showCustomerDashboard();
+                }
+            }
+
+            // Event listeners for order and customer updates
+            document.addEventListener('orderUpdated', () => {
+                loadOrders();
+                updateStats();
+            });
+
+            document.addEventListener('customerUpdated', () => {
+                loadCustomers();
+                updateStats();
+            });
+
+            // Set default date filter to today
+            const today = new Date().toLocaleString('id-ID', { 
+                timeZone: 'Asia/Makassar', 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit' 
+            }).split('/').reverse().join('-');
+            document.getElementById('dateFilter').value = today;
+
+            // Add print button for customers report
+            const customersSection = document.getElementById('customers');
+            const printButton = document.createElement('button');
+            printButton.className = 'btn btn-primary';
+            printButton.innerHTML = '<i class="fas fa-print"></i> Cetak Laporan Pelanggan';
+            printButton.onclick = printCustomersReport;
+            customersSection.insertBefore(printButton, customersSection.querySelector('.customers-table'));
+        });
+
+        // Close modals on outside click
+        document.getElementById('authContainer').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('authContainer')) {
+                hideAuth();
+            }
+        });
+
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('productModal')) {
+                closeProductModal();
+            }
+        });
+    </script>
+</body>
+</html>
