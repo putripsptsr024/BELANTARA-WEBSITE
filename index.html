@@ -80,6 +80,61 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
+        /* Category Navigation */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .category-btn:hover {
+            background: linear-gradient(45deg, #ff6f00, #e65b00);
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        /* Search Bar */
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .search-input:focus {
+            border-color: #ff6f00;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
         /* Auth Forms */
         .auth-container {
             display: none;
@@ -296,9 +351,19 @@
 
         .certificate-card embed {
             width: 100%;
-            height: 400px;
-            border: none;
+            height: 300px;
             border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .certificate-card a {
+            color: #ff6f00;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .certificate-card a:hover {
+            text-decoration: underline;
         }
 
         /* Cart */
@@ -479,6 +544,19 @@
             box-shadow: 0 0 0 3px rgba(26, 60, 52, 0.1);
         }
 
+        /* Search Results */
+        .search-results {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .search-results h2 {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
             .container {
@@ -487,6 +565,9 @@
             .products-grid, .certificates-grid {
                 grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
                 gap: 20px;
+            }
+            .category-nav {
+                gap: 10px;
             }
         }
 
@@ -523,7 +604,7 @@
                 font-size: 2.5rem;
             }
             .certificate-card embed {
-                height: 300px;
+                height: 200px;
             }
             .cart-sidebar {
                 width: 100%;
@@ -545,6 +626,20 @@
                 margin: 20px;
                 width: calc(100% - 40px);
                 padding: 30px 25px;
+            }
+            .category-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            .category-btn {
+                width: 100%;
+                max-width: 200px;
+                text-align: center;
+            }
+            .search-input {
+                max-width: 100%;
+                font-size: 14px;
+                padding: 10px 15px;
             }
         }
 
@@ -580,7 +675,7 @@
                 border-radius: 10px;
             }
             .certificate-card embed {
-                height: 200px;
+                height: 150px;
             }
             .product-info h3 {
                 font-size: 1.1rem;
@@ -636,6 +731,10 @@
                 padding: 12px;
                 font-size: 15px;
             }
+            .search-input {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
         }
 
         @media (max-width: 360px) {
@@ -650,7 +749,7 @@
                 font-size: 1.8rem;
             }
             .certificate-card embed {
-                height: 150px;
+                height: 120px;
             }
             .btn {
                 padding: 8px 15px;
@@ -669,6 +768,10 @@
                 height: 45px;
                 font-size: 1.1rem;
             }
+            .search-input {
+                font-size: 12px;
+                padding: 8px 10px;
+            }
         }
 
         @media (hover: none) and (pointer: coarse) {
@@ -682,7 +785,8 @@
             }
             .form-group input,
             .form-group select,
-            .variant-group select {
+            .variant-group select,
+            .search-input {
                 min-height: 44px;
                 padding: 12px 15px;
             }
@@ -708,6 +812,9 @@
             .auth-form, .product-modal-content {
                 max-height: 90vh;
                 overflow-y: auto;
+            }
+            .search-input {
+                font-size: 14px;
             }
         }
 
@@ -762,34 +869,66 @@
                 <p>~ LAYANAN DIGITAL BELANJA LANGSUNG ANTAR RAKYAT ~</p> 
             </div>
 
+            <!-- Category Navigation -->
+            <div class="category-nav">
+                <button class="category-btn" onclick="scrollToCategory('snackSection')"><i class="fas fa-cookie-bite"></i> Cemilan</button>
+                <button class="category-btn" onclick="scrollToCategory('beverageSection')"><i class="fas fa-mug-hot"></i> Minuman</button>
+                <button class="category-btn" onclick="scrollToCategory('foodSection')"><i class="fas fa-utensils"></i> Makanan</button>
+                <!-- <button class="category-btn" onclick="scrollToCategory('cigaretteSection')"><i class="fas fa-smoking"></i> Rokok</button> -->
+                <!-- <button class="category-btn" onclick="scrollToCategory('dessertSection')"><i class="fas fa-ice-cream"></i> Dessert</button> -->
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Cari menu...">
+            </div>
+
+            <!-- Search Results -->
+            <div class="search-results" id="searchResults">
+                <h2>Hasil Pencarian</h2>
+                <div class="products-grid" id="searchGrid"></div>
+            </div>
+
             <div class="certificates-section">
                 <h3>📜 Sertifikat dan Izin Resmi</h3>
                 <div class="certificates-grid">
                     <div class="certificate-card">
                         <h4>PERIZINAN BERUSAHA BERBASIS RISIKO</h4>
                         <embed src="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" type="application/pdf">
+                        <a href="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" target="_blank">Lihat Dokumen</a>
                     </div>
                     <div class="certificate-card">
                         <h4>SERTIFIKAT HALAL</h4>
                         <embed src="assets/certificates/SERTIFIKAT HALAL.pdf" type="application/pdf">
+                        <a href="assets/certificates/SERTIFIKAT HALAL.pdf" target="_blank">Lihat Dokumen</a>
                     </div>
                 </div>
             </div>
 
-            <div class="category-section">
+            <div class="category-section" id="snackSection">
                 <h2>🍪 Cemilan</h2>
                 <div class="products-grid" id="snackGrid"></div>
             </div>
 
-            <div class="category-section">
+            <div class="category-section" id="beverageSection">
                 <h2>🥤 Minuman</h2>
                 <div class="products-grid" id="beverageGrid"></div>
             </div>
 
-            <div class="category-section">
+            <div class="category-section" id="foodSection">
                 <h2>🍽️ Makanan</h2>
                 <div class="products-grid" id="foodGrid"></div>
             </div>
+
+            <!-- <div class="category-section" id="cigaretteSection">
+                <h2>🚬 Rokok</h2>
+                <div class="products-grid" id="cigaretteGrid"></div>
+            </div> -->
+
+            <!-- <div class="category-section" id="dessertSection">
+                <h2>🍨 Dessert</h2>
+                <div class="products-grid" id="dessertGrid"></div>
+            </div> -->
         </div>
 
         <!-- Product Modal -->
@@ -916,23 +1055,10 @@
         // Hardcoded product data with variants and categories
         const products = [
             {
-                id: 1,
-                name: "AMBAL",
-                price: 10000,
-                description: "- (KODE: KMC1)",
-                seller: "KULINER MERDEKA",
-                whatsapp: "082271624019",
-                image: "assets/image/ambal.png",
-                category: "cemilan",
-                variants: [
-                    { name: "", additionalPrice: 0 }
-                ]
-            },
-            {
                 id: 2,
                 name: "BANANA CRISPY",
                 price: 10000,
-                description: "NN. SUCITA (KODE: KMC2)",
+                description: "NN. SUCITA (KODE: KMC1)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/bananacrispy.jpeg",
@@ -950,7 +1076,7 @@
                 id: 3,
                 name: "BANANA ROLL",
                 price: 10000,
-                description: "NN. SUCITA (KODE: KMC3)",
+                description: "NN. SUCITA (KODE: KMC2)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/bananaroll.jpeg",
@@ -968,7 +1094,7 @@
                 id: 4,
                 name: "PISANG GORENG KEMBUNG",
                 price: 10000,
-                description: "NY. SARINI (KODE: KMC4)",
+                description: "NY. SARINI (KODE: KMC3)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/pisang goreng kembung.png",
@@ -986,33 +1112,33 @@
                 id: 5,
                 name: "CUCUR",
                 price: 10000,
-                description: "NY. SARINI (KODE: KMC5)",
+                description: "NY. SARINI (KODE: KMC4)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/cucur.png",
                 category: "cemilan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
                 id: 6,
                 name: "WINGKO G4",
                 price: 10000,
-                description: "TN. ANWAR (KODE: KMC6)",
+                description: "NY.YUNIATI (KODE: KMC5)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/wingko g4.png",
                 category: "cemilan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
                 id: 7,
                 name: "TETU NIPA",
                 price: 10000,
-                description: "- (KODE: KMC7)",
+                description: "- (KODE: KMC6)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/tetu nipa.png",
@@ -1026,26 +1152,26 @@
                 id: 8,
                 name: "SURABENG G4",
                 price: 10000,
-                description: "- (KODE: KMC8)",
+                description: "NY. YUNIATI (KODE: KMC7)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
                 image: "assets/image/surabeng.png",
                 category: "cemilan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
-                id: 9,
-                name: "PUTU SOKKO BERAS KETAN",
+                id: 35,
+                name: "ONDE-ONDE JAWA",
                 price: 10000,
-                description: "- (KODE: KMC9)",
+                description: "NY. YUNIATI (KODE: KMC8)",
                 seller: "KULINER MERDEKA",
                 whatsapp: "082271624019",
-                image: "assets/image/putu sokko beras ketan.png",
+                image: "assets/image/ondeondejawa.jpg",
                 category: "cemilan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1058,7 +1184,7 @@
                 image: "assets/image/jus rempah nusantara.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1071,7 +1197,7 @@
                 image: "assets/image/jus aneka rempah madu plus susu kambing etawa.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1084,7 +1210,7 @@
                 image: "assets/image/jus alpukat.jpg",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1097,7 +1223,7 @@
                 image: "assets/image/jus buah naga.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1110,7 +1236,7 @@
                 image: "assets/image/jus jeruk.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1123,7 +1249,7 @@
                 image: "assets/image/jus lidah buaya.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1136,7 +1262,7 @@
                 image: "assets/image/kopi o'.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1149,7 +1275,7 @@
                 image: "assets/image/kopi jahe.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1162,7 +1288,7 @@
                 image: "assets/image/kopi susu.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1175,7 +1301,7 @@
                 image: "assets/image/teh o'.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1188,7 +1314,7 @@
                 image: "assets/image/sarabba.png",
                 category: "minuman",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1217,7 +1343,7 @@
                 image: "assets/image/bakso.jpg",
                 category: "makanan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1258,7 +1384,7 @@
                 image: "assets/image/kari tahu lontong.png",
                 category: "makanan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1271,7 +1397,7 @@
                 image: "assets/image/mi goreng seafood.png",
                 category: "makanan",
                 variants: [
-                    { name: "", additionalPrice: 0 }
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             },
             {
@@ -1319,7 +1445,6 @@
                     { name: "TELUR (KODE: KMMA16)", additionalPrice: 0 }
                 ]
             },
-            
             {
                 id: 30,
                 name: "NASI IKAN BAKAR",
@@ -1348,6 +1473,98 @@
                 variants: [
                     { name: "1 EKOR (KODE: KMMA21)", additionalPrice: 5000 },
                     { name: "1/2 EKOR (KODE: KMMA22)", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 9,
+                name: "PUTU SOKKO BERAS KETAN",
+                price: 10000,
+                description: "TN. ANWAR (KODE: KMMA23)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/putu sokko beras ketan.png",
+                category: "makanan",
+                variants: [
+                    { name: "Standard", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 1,
+                name: "AMBAL",
+                price: 10000,
+                description: "- (KODE: KMMA24)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/ambal.png",
+                category: "makanan",
+                variants: [
+                    { name: "Standard", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 32,
+                name: "ROKOK DUNHILL",
+                price: 25000,
+                description: "TN. ANWAR (KODE: KMR1)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/rokok_dunhill.png",
+                category: "rokok",
+                variants: [
+                    { name: "Standard", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 33,
+                name: "ROKOK MARLBORO",
+                price: 30000,
+                description: "TN. ANWAR (KODE: KMR2)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/rokok_marlboro.png",
+                category: "rokok",
+                variants: [
+                    { name: "MERAH", additionalPrice: 0 },
+                    { name: "PUTIH", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 34,
+                name: "ROKOK SAMPOERNA",
+                price: 20000,
+                description: "TN. ANWAR (KODE: KMR3)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/rokok_sampoerna.png",
+                category: "rokok",
+                variants: [
+                    { name: "Standard", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 36,
+                name: "PUDING COKLAT",
+                price: 12000,
+                description: "NY. SARINI (KODE: KMD1)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/puding_coklat.jpg",
+                category: "dessert",
+                variants: [
+                    { name: "Standard", additionalPrice: 0 }
+                ]
+            },
+            {
+                id: 37,
+                name: "ES KRIM VANILA",
+                price: 15000,
+                description: "NY. YUNIATI (KODE: KMD2)",
+                seller: "KULINER MERDEKA",
+                whatsapp: "082271624019",
+                image: "assets/image/es_krim_vanila.jpg",
+                category: "dessert",
+                variants: [
+                    { name: "Standard", additionalPrice: 0 }
                 ]
             }
         ];
@@ -1396,11 +1613,24 @@
             return localNumber;
         }
 
+        // Scroll to category
+        function scrollToCategory(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         // Load products
-        function loadProducts() {
+        function loadProducts(searchTerm = '') {
             const snackGrid = document.getElementById('snackGrid');
             const beverageGrid = document.getElementById('beverageGrid');
             const foodGrid = document.getElementById('foodGrid');
+            const cigaretteGrid = document.getElementById('cigaretteGrid');
+            const dessertGrid = document.getElementById('dessertGrid');
+            const searchGrid = document.getElementById('searchGrid');
+            const searchResults = document.getElementById('searchResults');
+            const categorySections = document.querySelectorAll('.category-section');
 
             const renderProducts = (products, grid) => {
                 if (grid) {
@@ -1432,13 +1662,43 @@
                 }
             };
 
-            const snackProducts = products.filter(p => p.category === 'cemilan');
-            const beverageProducts = products.filter(p => p.category === 'minuman');
-            const foodProducts = products.filter(p => p.category === 'makanan');
+            if (searchTerm) {
+                const filteredProducts = products.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+                categorySections.forEach(section => section.style.display = 'none');
+                searchResults.style.display = 'block';
+                renderProducts(filteredProducts, searchGrid);
+                if (filteredProducts.length === 0) {
+                    searchGrid.innerHTML = `
+                        <div style="text-align: center; color: white; padding: 40px 20px;">
+                            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                            <p>Tidak ada produk ditemukan</p>
+                        </div>
+                    `;
+                }
+            } else {
+                categorySections.forEach(section => section.style.display = 'block');
+                searchResults.style.display = 'none';
+                const snackProducts = products.filter(p => p.category === 'cemilan');
+                const beverageProducts = products.filter(p => p.category === 'minuman');
+                const foodProducts = products.filter(p => p.category === 'makanan');
+                const cigaretteProducts = products.filter(p => p.category === 'rokok');
+                const dessertProducts = products.filter(p => p.category === 'dessert');
 
-            renderProducts(snackProducts, snackGrid);
-            renderProducts(beverageProducts, beverageGrid);
-            renderProducts(foodProducts, foodGrid);
+                renderProducts(snackProducts, snackGrid);
+                renderProducts(beverageProducts, beverageGrid);
+                renderProducts(foodProducts, foodGrid);
+                renderProducts(cigaretteProducts, cigaretteGrid);
+                renderProducts(dessertProducts, dessertGrid);
+            }
+        }
+
+        // Search functionality
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.trim();
+            loadProducts(searchTerm);
         }
 
         // Add product directly to cart (for single-variant products)
@@ -1451,15 +1711,15 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
 
-            const selectedVariant = product.variants[0]; // Single variant
+            const selectedVariant = product.variants[0];
             const cartItem = {
                 ...product,
-                variant: selectedVariant.name,
+                variant: selectedVariant.name || "Standard",
                 price: product.price + selectedVariant.additionalPrice,
                 quantity: 1
             };
 
-            const existingItem = cart.find(item => item.id === product.id && item.variant === selectedVariant.name);
+            const existingItem = cart.find(item => item.id === product.id && item.variant === cartItem.variant);
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
@@ -1518,12 +1778,12 @@
 
             const cartItem = {
                 ...product,
-                variant: selectedVariant.name,
+                variant: selectedVariant.name || "Standard",
                 price: product.price + selectedVariant.additionalPrice,
                 quantity: 1
             };
 
-            const existingItem = cart.find(item => item.id === product.id && item.variant === selectedVariant.name);
+            const existingItem = cart.find(item => item.id === product.id && item.variant === cartItem.variant);
             if (existingItem) {
                 existingItem.quantity += 1;
             } else {
@@ -1704,14 +1964,15 @@
                                 style="background: #e74c3c; color: white; border: none; border-radius: 50%; 
                                 width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; 
                                 justify-content: center; font-size: 0.9rem;">-</button>
-                            <span style="font-weight: bold; min-width: 25px; text-align: center;">${item.quantity}</span>
+                            <span style="font-size: 0.9rem; min-width: 30px; text-align: center;">${item.quantity}</span>
                             <button onclick="updateQuantity(${item.id}, '${item.variant}', 1)" 
                                 style="background: #27ae60; color: white; border: none; border-radius: 50%; 
                                 width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; 
                                 justify-content: center; font-size: 0.9rem;">+</button>
                             <button onclick="removeFromCart(${item.id}, '${item.variant}')" 
-                                style="background: #e74c3c; color: white; border: none; padding: 6px 10px; 
-                                border-radius: 5px; cursor: pointer; font-size: 0.8rem; margin-left: 10px;">
+                                style="background: #c0392b; color: white; border: none; border-radius: 50%; 
+                                width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; 
+                                justify-content: center; font-size: 0.9rem;">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -1721,30 +1982,15 @@
         }
 
         function toggleCart() {
-            if (!currentUser) {
-                showLogin();
-                return;
-            }
             const cartSidebar = document.getElementById('cartSidebar');
             const cartOverlay = document.getElementById('cartOverlay');
-            
             cartSidebar.classList.toggle('open');
             cartOverlay.classList.toggle('show');
-            
-            if (cartSidebar.classList.contains('open')) {
-                document.body.style.overflow = 'hidden';
-            } else {
-                document.body.style.overflow = '';
-            }
         }
 
         function checkout() {
             if (!currentUser) {
                 showLogin();
-                return;
-            }
-            if (cart.length === 0) {
-                alert('Keranjang belanja kosong!');
                 return;
             }
 
@@ -1754,60 +2000,70 @@
                 return;
             }
 
-            const selectedAddress = addresses.find(addr => addr.name === deliveryAddress);
-            if (!selectedAddress) {
-                alert('Alamat pengiriman tidak valid!');
+            if (cart.length === 0) {
+                alert('Keranjang belanja kosong!');
                 return;
             }
 
             const uniqueSellers = [...new Set(cart.map(item => item.seller))];
+            const selectedAddress = addresses.find(addr => addr.name === deliveryAddress);
             const shippingCost = uniqueSellers.length * selectedAddress.shippingCost;
             const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const totalAmount = subtotal + shippingCost;
 
-            const orderId = `ORD${Date.now()}`;
-            const orderDate = new Date().toLocaleString('id-ID', { 
-                timeZone: 'Asia/Makassar', 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            const orderDetails = cart.map(item => {
+                const totalItemPrice = item.price * item.quantity;
+                return `*${item.name} (${item.variant})* - ${item.quantity} x ${formatCurrency(item.price)} = ${formatCurrency(totalItemPrice)}`;
+            }).join('\n');
+            
+            const message = `Pesanan Baru dari ${currentUser.name}\n\n` +
+                           `Detail Pesanan:\n${orderDetails}\n\n` +
+                           `Subtotal: ${formatCurrency(subtotal)}\n` +
+                           `Biaya Pengiriman (${uniqueSellers.length} penjual): ${formatCurrency(shippingCost)}\n` +
+                           `Total: ${formatCurrency(totalAmount)}\n\n` +
+                           `Alamat Pengiriman: ${deliveryAddress}\n` +
+                           `Kontak: ${currentUser.phone}\n` +
+                           `Email: ${currentUser.email}`;
 
-            const itemsList = cart.map(item => 
-                `${item.name} (${item.variant}) (${item.quantity}x) - ${formatCurrency(item.price * item.quantity)}`
-            ).join('\n');
-            const adminMessage = `Notifikasi Pesanan Baru\n\nID Pesanan: ${orderId}\nPelanggan: ${currentUser.name}\nAlamat: ${deliveryAddress}\nNo. HP: ${currentUser.phone || 'Belum diisi'}\n\nDetail Pesanan:\n${itemsList}\n\nRincian:\n- Subtotal: ${formatCurrency(subtotal)}\n- Ongkir: ${formatCurrency(shippingCost)}\n- Total: ${formatCurrency(totalAmount)}\n\nTanggal: ${orderDate}\n\n*Harap konfirmasi pesanan ini.*`;
-            const adminWhatsAppUrl = `https://wa.me/${convertToInternationalNumber(adminWhatsApp)}?text=${encodeURIComponent(adminMessage)}`;
-            window.open(adminWhatsAppUrl, '_blank');
+            const whatsappMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${adminWhatsApp}?text=${whatsappMessage}`;
 
             cart = [];
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCartUI();
             toggleCart();
-            alert('Pesanan telah dikirim ke WhatsApp admin untuk konfirmasi.');
+
+            window.open(whatsappUrl, '_blank');
+            alert('Pesanan telah dikirim ke WhatsApp penjual. Silakan lanjutkan pembayaran dan konfirmasi.');
         }
 
-        // Initialize
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
-            loadProducts();
             updateNavigation();
             updateCartVisibility();
             updateCartUI();
+            loadProducts();
+
+            // Search input event listener
+            document.getElementById('searchInput').addEventListener('input', handleSearch);
         });
 
-        // Close modals on outside click
+        // Close modal on click outside
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('productModal')) {
+                closeProductModal();
+            }
+        });
+
         document.getElementById('authContainer').addEventListener('click', (e) => {
             if (e.target === document.getElementById('authContainer')) {
                 hideAuth();
             }
         });
 
-        document.getElementById('productModal').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('productModal')) {
-                closeProductModal();
-            }
+        // Prevent default form submission
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => e.preventDefault());
         });
     </script>
 </body>
