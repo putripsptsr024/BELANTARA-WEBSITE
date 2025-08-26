@@ -366,6 +366,30 @@
             text-decoration: underline;
         }
 
+        .pdf-container {
+            position: relative;
+            width: 100%;
+            height: 400px; /* Default height for larger screens */
+            overflow: hidden;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .pdf-viewer {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .pdf-fallback {
+            display: none;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
         /* Cart */
         .cart-icon {
             position: fixed;
@@ -892,18 +916,23 @@
             <div class="certificates-section">
                 <h3>📜 Sertifikat dan Izin Resmi</h3>
                 <div class="certificates-grid">
-                    <div class="certificate-card">
-                        <h4>PERIZINAN BERUSAHA BERBASIS RISIKO</h4>
-                        <embed src="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" type="application/pdf">
-                        <a href="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" target="_blank">Lihat Dokumen</a>
-                    </div>
-                    <div class="certificate-card">
-                        <h4>SERTIFIKAT HALAL</h4>
-                        <embed src="assets/certificates/SERTIFIKAT HALAL.pdf" type="application/pdf">
-                        <a href="assets/certificates/SERTIFIKAT HALAL.pdf" target="_blank">Lihat Dokumen</a>
-                    </div>
-                </div>
+            <div class="certificate-card">
+                <h4>PERIZINAN BERUSAHA BERBASIS RISIKO</h4>
+                <div class="pdf-container">
+                <iframe src="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf#toolbar=0" title="Perizinan Berusaha Berbasis Risiko" class="pdf-viewer"></iframe>
+                <p class="pdf-fallback">Jika PDF tidak tampil, silakan <a href="assets/certificates/PERIZINAN BERUSAHA BERBASIS RESIKO.pdf" target="_blank">unduh dokumen</a>.</p>
             </div>
+            </div>
+        
+            <div class="certificate-card">
+                <h4>SERTIFIKAT HALAL</h4>
+                <div class="pdf-container">
+                <iframe src="assets/certificates/SERTIFIKAT HALAL.pdf#toolbar=0" title="Sertifikat Halal" class="pdf-viewer"></iframe>
+                <p class="pdf-fallback">Jika PDF tidak tampil, silakan <a href="assets/certificates/SERTIFIKAT HALAL.pdf" target="_blank">unduh dokumen</a>.</p>
+            </div>
+            </div>
+        </div>
+    </div>
 
             <div class="category-section" id="snackSection">
                 <h2>🍪 Cemilan</h2>
